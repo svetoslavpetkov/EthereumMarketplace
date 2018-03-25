@@ -46,15 +46,13 @@ library SafeMath {
 }
 
 contract Marketplace {
-    
-    
+  
     struct ProductData{
         string name;
         uint256 price;
         uint256 quantity;
     }
-    
-    
+        
     address private owner;
     mapping(bytes32 => ProductData) private products ;
     bytes32[] private allProductsIds;
@@ -76,7 +74,7 @@ contract Marketplace {
     function buy(bytes32 ID, uint quantity) public payable {
         require(quantity > 0);
         require(products[ID].quantity >= quantity);
-        require(msg.value >= SafeMath.mul( products[ID].quantity, products[ID].price));
+        require(msg.value >= SafeMath.mul( quantity, products[ID].price));
         
         products[ID].quantity = SafeMath.sub(products[ID].quantity ,quantity);
         
@@ -114,8 +112,7 @@ contract Marketplace {
     }
     
     function getProduct(bytes32 ID) public view returns(string name, uint price, uint quantity) {
-        require(products[ID].price > 0);
-        
+        require(products[ID].price > 0);        
         return(name = products[ID].name, price = products[ID].price, quantity = products[ID].quantity);
     }
     
@@ -124,8 +121,7 @@ contract Marketplace {
     }
     
     function getPrice(bytes32 ID, uint quantity) public view returns (uint) {
-        require(products[ID].price > 0);
-        
+        require(products[ID].price > 0);       
         return SafeMath.mul(products[ID].price , quantity);
     }
 }
