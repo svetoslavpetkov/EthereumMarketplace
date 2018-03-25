@@ -60,7 +60,7 @@ contract Marketplace {
     bytes32[] private allProductsIds;
     
     event BuyLog(bytes32 indexed productId,address indexed buyer, uint256 quantity, uint256 price);
-    event ProductAdded(bytes32 indexed productId,string name, uint256 quantity, uint256 price);
+    event ProductAdded(bytes32 productId,string name, uint256 quantity, uint256 price);
     event ProductUpdated(bytes32 indexed productId,uint256 newQuantity);
     
     function Marketplace() public{
@@ -91,9 +91,13 @@ contract Marketplace {
         
         ProductUpdated(ID, newQuantity);
     }
+	
+	function getProductID(string name) pure public returns(bytes32){
+		return sha256(name);
+	}
     
     //creates a new product and returns its ID
-    function newProduct(string name, uint price, uint quantity) public returns(bytes32) {
+    function newProduct(string name, uint price, uint quantity) public onlyOwner returns(bytes32) {
         require(price > 0);
         bytes32 _id = sha256(name);
         assert(products[_id].price == 0);
